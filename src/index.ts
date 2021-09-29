@@ -1,8 +1,5 @@
 import puppeteer from 'puppeteer';
-import * as dotenv from 'dotenv';
 import { username, password } from './secrets';
-
-dotenv.config();
 
 const randomIntFromInterval = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min) + min);
@@ -21,7 +18,6 @@ const authenticate = async (page: puppeteer.Page) => {
       await userNameInputs[0].focus();
       await page.keyboard.type(username);
     }
-    //
     const passwordInputs = await page.$x(`//input[@placeholder="Senha"]`);
     if (passwordInputs.length > 0) {
       await passwordInputs[0].focus();
@@ -33,6 +29,20 @@ const authenticate = async (page: puppeteer.Page) => {
     }
   } catch (e) {
     console.log('Error in Auth:', e);
+  }
+};
+
+const navigate = async (page: puppeteer.Page) => {
+  try {
+    const subjecsButton = await page.$x(
+      `//td[text()='Disciplinas Matriculadas']`,
+    );
+    if (subjecsButton.length > 0) {
+      console.log('clicou');
+      await subjecsButton[0].click();
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -50,13 +60,13 @@ const browserSetup = async () => {
     await page.goto(URL, { waitUntil: 'networkidle2' });
     await SleepFor(page, 1000, 200);
     await authenticate(page);
+    await SleepFor(page, 1000, 200);
+    await navigate(page);
   } catch (e) {
     console.log(e);
   }
 };
 
-const Setup = async () => {
+(async () => {
   await browserSetup();
-};
-
-Setup();
+})();
