@@ -1,8 +1,5 @@
 import puppeteer from 'puppeteer';
-import * as dotenv from 'dotenv';
 import { username, password } from './secrets';
-
-dotenv.config();
 
 const randomIntFromInterval = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min) + min);
@@ -21,7 +18,6 @@ const authenticate = async (page: puppeteer.Page) => {
       await userNameInputs[0].focus();
       await page.keyboard.type(username);
     }
-    //
     const passwordInputs = await page.$x(`//input[@placeholder="Senha"]`);
     if (passwordInputs.length > 0) {
       await passwordInputs[0].focus();
@@ -55,8 +51,6 @@ const browserSetup = async () => {
   }
 };
 
-const Setup = async () => {
+(async () => {
   await browserSetup();
-};
-
-Setup();
+})();
