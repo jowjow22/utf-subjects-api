@@ -32,6 +32,20 @@ const authenticate = async (page: puppeteer.Page) => {
   }
 };
 
+const navigate = async (page: puppeteer.Page) => {
+  try {
+    const subjecsButton = await page.$x(
+      `//td[text()='Disciplinas Matriculadas']`,
+    );
+    if (subjecsButton.length > 0) {
+      console.log('clicou');
+      await subjecsButton[0].click();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const browserSetup = async () => {
   try {
     const browser = await puppeteer.launch({ headless: false });
@@ -46,6 +60,8 @@ const browserSetup = async () => {
     await page.goto(URL, { waitUntil: 'networkidle2' });
     await SleepFor(page, 1000, 200);
     await authenticate(page);
+    await SleepFor(page, 1000, 200);
+    await navigate(page);
   } catch (e) {
     console.log(e);
   }
